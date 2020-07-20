@@ -3,6 +3,7 @@ package ru.grakhell.effectview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.renderscript.RenderScript
 import android.util.AttributeSet
@@ -20,11 +21,11 @@ class EffectView(
     private var source: BitmapSource? = null
     private var script: RenderScript? = null
     private var effects: MutableList<Effect> = mutableListOf()
-    private var pointX = x
-    private var pointY = y
-    private var viewWidth = width
-    private var viewHeight = height
-    private lateinit var bitmap:Bitmap
+    private var pointX = -1f
+    private var pointY = -1f
+    private var viewWidth = -1
+    private var viewHeight = -1
+    private var bitmap:Bitmap? = null
 
     init {
         script = RenderScript.create(context)
@@ -57,20 +58,24 @@ class EffectView(
         super.onDraw(canvas)
         if (isVisible && width>0 && height>0) {
             source?.let { src ->
-                bitmap = src.getBitmap(if (this::bitmap.isInitialized){bitmap}else {null})
-                bitmap = crop(bitmap)
-                effects.forEach {
-                    bitmap = it.applyEffect(bitmap)
-                }
-                canvas?.let {cnvs ->
-                    cnvs.save()
-                    with(src.getScaling()) {
-                        if (this>1) {
-                            cnvs.scale(this.toFloat(),this.toFloat())
-                        }
+
+                bitmap = src.getBitmap(bitmap)
+                bitmap?.let {bitmap = crop(it)}
+                bitmap?.let {btmp ->
+                    effects.forEach {
+                        if (!it.isPrepared()) it.prepare(script)
+                        bitmap = it.applyEffect(btmp)
                     }
-                    cnvs.drawBitmap(bitmap,0f, 0f, null)
-                    cnvs.restore()
+                    canvas?.let {cnvs ->
+                        cnvs.save()
+                        with(src.getScaling()) {
+                            if (this>1) {
+                                cnvs.scale(this.toFloat(),this.toFloat())
+                            }
+                        }
+                        cnvs.drawBitmap(btmp,0f, 0f, null)
+                        cnvs.restore()
+                    }
                 }
             }
         }
@@ -78,10 +83,24 @@ class EffectView(
 
     private fun crop(src:Bitmap):Bitmap {
         val scale = 1f/ (source?.getScaling()?:1)
-        var xt = if (pointX>=0){floor(pointX * scale).toInt()}else{0}
-        var yt = if (pointY>=0){floor(pointY * scale).toInt()}else{0}
-        var wid = if (viewWidth>0) {floor(viewWidth * scale).toInt()} else {1}
-        var hei = if (viewHeight>0) {floor(viewHeight * scale).toInt()} else {1}
+        var xt = if (pointX>=0){floor(pointX * scale).toInt()}else{floor(x * scale).toInt()}
+        var yt = if (pointY>=0){floor(pointY * scale).toInt()}else{floor(y * scale).toInt()}
+        var wid = if (viewWidth>0) {floor(viewWidth * scale).toInt()} else {floor(width * scale).toInt()}
+        var hei = if (viewHeight>0) {floor(viewHeight * scale).toInt()} else {floor(height * scale).toInt()}
+        if (xt>src.width){
+            xt =src.width - wid
+            if (xt<0) {
+                xt = 0
+                wid = src.width
+            }
+        }
+        if (yt>src.height) {
+            yt = src.height - hei
+            if (yt<0) {
+                yt = 0
+                wid =src.height
+            }
+        }
         if ((wid+xt)>src.width) {
             wid = src.width - xt
         }
@@ -103,6 +122,13 @@ class EffectView(
         )
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (script == null) {
+            script = RenderScript.create(context)
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (script!= null) {
@@ -121,6 +147,11 @@ class EffectView(
     fun removeEffect(effect: Effect):EffectView {
         effects.remove(effect)
         invalidate()
+        return this
+    }
+
+    fun clearEffects():EffectView {
+        effects.clear()
         return this
     }
 

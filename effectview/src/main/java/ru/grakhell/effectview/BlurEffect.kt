@@ -29,7 +29,10 @@ class BlurEffect(listener:OnEffectSettingsChangedListener? =null):AbstractEffect
     }
 
     override fun prepare(script: RenderScript?) {
-        renderScript = script
-        blurScript = ScriptIntrinsicBlur.create(script, Element.U8_4(script))
+        script?.let {
+            renderScript = it
+            blurScript = ScriptIntrinsicBlur.create(it, Element.U8_4(it))
+        }
+        super.prepare(script)
     }
 }
