@@ -28,7 +28,7 @@ class EffectView(
     private var bitmap:Bitmap? = null
 
     init {
-        script = RenderScript.create(context)
+        if(!isInEditMode) script = RenderScript.create(context)
         if (effects.size >0) {
             effects.forEach { it.prepare(script)}
         }
@@ -56,7 +56,7 @@ class EffectView(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        if (isVisible && width>0 && height>0) {
+        if (isVisible && width>0 && height>0 && !isInEditMode) {
             source?.let { src ->
 
                 bitmap = src.getBitmap(bitmap)
@@ -124,14 +124,14 @@ class EffectView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (script == null) {
+        if (script == null && !isInEditMode) {
             script = RenderScript.create(context)
         }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (script!= null) {
+        if (script!= null && !isInEditMode) {
             script = null
         }
     }
