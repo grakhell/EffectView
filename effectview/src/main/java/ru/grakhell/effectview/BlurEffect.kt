@@ -5,7 +5,6 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import android.view.View
 
 class BlurEffect(listener:OnEffectSettingsChangedListener? =null):AbstractEffect(listener) {
     private var radius = 1f

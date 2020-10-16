@@ -3,14 +3,10 @@ package ru.grakhell.effectview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Point
-import android.graphics.drawable.ColorDrawable
 import android.renderscript.RenderScript
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
-import kotlin.math.abs
 import kotlin.math.floor
 
 class EffectView(
