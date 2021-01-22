@@ -83,18 +83,18 @@ class EffectView(
         var yt = if (pointY>=0){floor(pointY * scale).toInt()}else{floor(y * scale).toInt()}
         var wid = if (viewWidth>0) {floor(viewWidth * scale).toInt()} else {floor(width * scale).toInt()}
         var hei = if (viewHeight>0) {floor(viewHeight * scale).toInt()} else {floor(height * scale).toInt()}
-        if (xt>src.width){
+        if (xt>=src.width){
             xt =src.width - wid
             if (xt<0) {
                 xt = 0
                 wid = src.width
             }
         }
-        if (yt>src.height) {
+        if (yt>=src.height) {
             yt = src.height - hei
             if (yt<0) {
                 yt = 0
-                wid =src.height
+                hei =src.height
             }
         }
         if ((wid+xt)>src.width) {
