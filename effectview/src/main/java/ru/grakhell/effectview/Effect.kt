@@ -5,6 +5,6 @@ import android.renderscript.RenderScript
 
 interface Effect {
     fun isPrepared():Boolean
-    fun prepare(script: RenderScript?=null)
+    fun prepare()
     fun applyEffect(bitmap: Bitmap): Bitmap
 }

@@ -3,18 +3,26 @@ package ru.grakhell.effectview
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
+import androidx.annotation.FloatRange
 import kotlin.math.round
 
 class ViewBitmapSource(private val view: View):BitmapSource {
 
-    private var scaling = 0
+    private var scaling = 1f
     private lateinit var bitmap:Bitmap
 
-    override fun setScaling(scaling: Int) {
+    override fun setScaling( @FloatRange(from = 1.0) scaling: Float) {
+        if (scaling<1f) return
         this.scaling = scaling
     }
 
-    override fun getScaling(): Int = scaling
+    override fun getPosition(): IntArray? {
+        val arr = IntArray(2)
+        view.getLocationOnScreen(arr)
+        return arr
+    }
+
+    override fun getScaling(): Float = scaling
 
     override fun getBitmap(dest:Bitmap?): Bitmap {
         val scale = 1f/scaling

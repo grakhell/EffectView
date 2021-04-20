@@ -2,11 +2,15 @@ package ru.grakhell.effectview
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.renderscript.RenderScript
+import android.graphics.Matrix
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.graphics.applyCanvas
 import androidx.core.view.isVisible
+import ru.grakhell.effectview.util.ScaledSize
+import ru.grakhell.effectview.util.ScalingUtil
 import kotlin.math.floor
 
 class EffectView(
@@ -15,18 +19,16 @@ class EffectView(
 ): View(context, attr) {
 
     private var source: BitmapSource? = null
-    private var script: RenderScript? = null
     private var effects: MutableList<Effect> = mutableListOf()
-    private var pointX = -1f
-    private var pointY = -1f
+    private var pointX = -1
+    private var pointY = -1
     private var viewWidth = -1
     private var viewHeight = -1
     private var bitmap:Bitmap? = null
 
     init {
-        if(!isInEditMode) script = RenderScript.create(context)
         if (effects.size >0) {
-            effects.forEach { it.prepare(script)}
+            effects.forEach { it.prepare()}
         }
     }
 
@@ -34,11 +36,11 @@ class EffectView(
         source= src
     }
 
-    fun setViewPointX(x:Float) {
+    fun setViewPointX(x:Int) {
         pointX = x
     }
 
-    fun setViewPointY(y:Float){
+    fun setViewPointY(y:Int){
         pointY = y
     }
 
@@ -52,38 +54,67 @@ class EffectView(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        if (isVisible && width>0 && height>0 && !isInEditMode) {
+        if (isVisible && !isInEditMode) {
             source?.let { src ->
-
-                bitmap = src.getBitmap(bitmap)
-                bitmap?.let {bitmap = crop(it)}
-                bitmap?.let {btmp ->
-                    effects.forEach {
-                        if (!it.isPrepared()) it.prepare(script)
-                        bitmap = it.applyEffect(btmp)
-                    }
-                    canvas?.let {cnvs ->
-                        cnvs.save()
-                        with(src.getScaling()) {
-                            if (this>1) {
-                                cnvs.scale(this.toFloat(),this.toFloat())
-                            }
+                if (!ScalingUtil.checkSize(width, height, src.getScaling())) {
+                    bitmap = src.getBitmap(bitmap)
+                    bitmap?.let {bitmap = crop(it)}
+                    bitmap?.let {btmp ->
+                        effects.forEach {
+                            if (!it.isPrepared()) it.prepare()
+                            bitmap = it.applyEffect(btmp)
                         }
-                        cnvs.drawBitmap(btmp,0f, 0f, null)
-                        cnvs.restore()
+                        canvas?.let {cnvs ->
+                            cnvs.save()
+                            with(src.getScaling()) {
+                                if (this>1) {
+                                    cnvs.scale(this.toFloat(),this.toFloat())
+                                }
+                            }
+                            cnvs.drawBitmap(btmp,0f, 0f, null)
+                            cnvs.restore()
+                        }
                     }
                 }
             }
         }
     }
 
+    private fun getSize(): ScaledSize {
+        var wid = if (viewWidth>0) viewWidth else width
+        var hei = if (viewHeight>0) viewHeight else height
+        return ScalingUtil.scale(wid, hei, source?.getScaling()?:1f)
+    }
+
+    private fun getCoords(scale:Float):FloatArray {
+        val coords =  if (pointX >0 && pointY >0) {
+            IntArray(2).apply {
+                this[0] = pointX
+                this[1] = pointY
+            }
+        } else {
+            IntArray(2).apply {
+                getLocationOnScreen(this)
+            }
+        }
+        val sourceCoords = source?.getPosition()?: IntArray(2)
+        val scaledCoords = FloatArray(2)
+        scaledCoords[0] = -(coords[0] - sourceCoords[0])/scale
+        scaledCoords[1] = -(coords[1] - sourceCoords[1])/scale
+        return scaledCoords
+    }
+
     private fun crop(src:Bitmap):Bitmap {
-        val scale = 1f/ (source?.getScaling()?:1)
-        var xt = if (pointX>=0){floor(pointX * scale).toInt()}else{floor(x * scale).toInt()}
-        var yt = if (pointY>=0){floor(pointY * scale).toInt()}else{floor(y * scale).toInt()}
-        var wid = if (viewWidth>0) {floor(viewWidth * scale).toInt()} else {floor(width * scale).toInt()}
-        var hei = if (viewHeight>0) {floor(viewHeight * scale).toInt()} else {floor(height * scale).toInt()}
-        if (xt>=src.width){
+        val size = getSize()
+        val coords = getCoords(source?.getScaling()?:1f)
+        val mtrx = Matrix().apply {
+            setTranslate(coords[0], coords[1])
+        }
+        val btm = Bitmap.createBitmap(size.width, size.height,Bitmap.Config.ARGB_8888 )
+        btm.applyCanvas {
+            this.drawBitmap(src, mtrx, null)
+        }
+        /*if (xt>=src.width){
             xt =src.width - wid
             if (xt<0) {
                 xt = 0
@@ -108,35 +139,12 @@ class EffectView(
         }
         if (hei<1) {
             hei = 1
-        }
-        return Bitmap.createBitmap(
-            src,
-            xt,
-            yt,
-            wid,
-            hei
-        )
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        if (script == null && !isInEditMode) {
-            script = RenderScript.create(context)
-        }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        if (script!= null && !isInEditMode) {
-            script = null
-        }
+        }*/
+        return btm
     }
 
     fun addEffect(effect: Effect):EffectView {
         effects.add(effect)
-        if (script!= null) {
-            effect.prepare(script)
-        }
         return this
     }
 

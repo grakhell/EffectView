@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EffectView">
+        <attr name="effect_image_scale" format="integer"/>
+        <attr name="effect_fixed_matrix" format="boolean" />
+        <attr name="effect_root_view" format="reference"/>
+    </declare-styleable>
+</resources>

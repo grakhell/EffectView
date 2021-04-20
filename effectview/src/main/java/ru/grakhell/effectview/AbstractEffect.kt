@@ -8,7 +8,7 @@ abstract class AbstractEffect(private val listener: OnEffectSettingsChangedListe
 
     override fun isPrepared(): Boolean =prepared
 
-    override fun prepare(script: RenderScript?) {
+    override fun prepare() {
         prepared = true
     }
 
