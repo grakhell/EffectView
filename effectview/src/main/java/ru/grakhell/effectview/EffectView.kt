@@ -114,32 +114,6 @@ class EffectView(
         btm.applyCanvas {
             this.drawBitmap(src, mtrx, null)
         }
-        /*if (xt>=src.width){
-            xt =src.width - wid
-            if (xt<0) {
-                xt = 0
-                wid = src.width
-            }
-        }
-        if (yt>=src.height) {
-            yt = src.height - hei
-            if (yt<0) {
-                yt = 0
-                hei =src.height
-            }
-        }
-        if ((wid+xt)>src.width) {
-            wid = src.width - xt
-        }
-        if ((hei+yt)>src.height) {
-            hei = src.height - yt
-        }
-        if (wid<1) {
-            wid = 1
-        }
-        if (hei<1) {
-            hei = 1
-        }*/
         return btm
     }
 
