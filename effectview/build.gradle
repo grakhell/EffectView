@@ -11,7 +11,7 @@ deps[project.name] = [
 		implementation           : [
                 deps.kotlin.stdlib,
                 deps.android.core,
-                deps.android.appcompat,
+                deps.android.appcompat
         ],
         testImplementation      : [
                 deps.test.junit

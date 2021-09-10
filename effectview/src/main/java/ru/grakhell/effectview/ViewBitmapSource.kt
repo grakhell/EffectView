@@ -16,7 +16,7 @@ class ViewBitmapSource(private val view: View):BitmapSource {
         this.scaling = scaling
     }
 
-    override fun getPosition(): IntArray? {
+    override fun getPosition(): IntArray {
         val arr = IntArray(2)
         view.getLocationOnScreen(arr)
         return arr

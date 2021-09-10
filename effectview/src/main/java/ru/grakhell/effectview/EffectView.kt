@@ -2,7 +2,6 @@ package ru.grakhell.effectview
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.util.AttributeSet
@@ -11,7 +10,6 @@ import androidx.core.graphics.applyCanvas
 import androidx.core.view.isVisible
 import ru.grakhell.effectview.util.ScaledSize
 import ru.grakhell.effectview.util.ScalingUtil
-import kotlin.math.floor
 
 class EffectView(
     context: Context,
@@ -68,7 +66,7 @@ class EffectView(
                             cnvs.save()
                             with(src.getScaling()) {
                                 if (this>1) {
-                                    cnvs.scale(this.toFloat(),this.toFloat())
+                                    cnvs.scale(this,this)
                                 }
                             }
                             cnvs.drawBitmap(btmp,0f, 0f, null)
@@ -81,8 +79,8 @@ class EffectView(
     }
 
     private fun getSize(): ScaledSize {
-        var wid = if (viewWidth>0) viewWidth else width
-        var hei = if (viewHeight>0) viewHeight else height
+        val wid = if (viewWidth>0) viewWidth else width
+        val hei = if (viewHeight>0) viewHeight else height
         return ScalingUtil.scale(wid, hei, source?.getScaling()?:1f)
     }
 
