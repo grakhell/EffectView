@@ -1,40 +1,21 @@
 package ru.grakhell.effectview
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
+import androidx.annotation.IntRange
+import com.google.android.renderscript.Toolkit
 
-class BlurEffect(context: Context, listener:OnEffectSettingsChangedListener? =null):AbstractEffect(listener) {
-    private var radius = 1f
-    private var blurScript: ScriptIntrinsicBlur? = null
-    private var renderScript: RenderScript? = null
+class BlurEffect(
+    @IntRange(from=1, to=25) radius:Int,
+    listener:OnEffectSettingsChangedListener? =null
+):AbstractEffect(listener) {
+    private var _radius = radius
 
-    init {
-        renderScript = RenderScript.create(context)
-        prepare()
-    }
-
-    fun setRadius(rad:Int){
-        radius = rad.toFloat()
+    fun setRadius(@IntRange(from=1, to=25) rad:Int){
+        _radius = rad
         invalidate()
     }
 
     override fun applyEffect(bitmap: Bitmap): Bitmap {
-        val input = Allocation.createFromBitmap(renderScript, bitmap)
-        val output = Allocation.createTyped(renderScript, input.type)
-        blurScript?.setRadius(radius)
-        blurScript?.setInput(input)
-        blurScript?.forEach(output)
-        output.copyTo(bitmap)
-        return bitmap
-    }
-
-    override fun prepare() {
-        renderScript?.let {
-            blurScript = ScriptIntrinsicBlur.create(it, Element.U8_4(it))
-        }
+        return Toolkit.blur(bitmap, _radius)
     }
 }

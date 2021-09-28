@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
+import android.graphics.RenderEffect
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.applyCanvas
 import androidx.core.view.isVisible
 import ru.grakhell.effectview.util.ScaledSize
@@ -23,12 +25,6 @@ class EffectView(
     private var viewWidth = -1
     private var viewHeight = -1
     private var bitmap:Bitmap? = null
-
-    init {
-        if (effects.size >0) {
-            effects.forEach { it.prepare()}
-        }
-    }
 
     fun setSource(src:BitmapSource) {
         source= src
@@ -57,11 +53,12 @@ class EffectView(
                 if (!ScalingUtil.checkSize(width, height, src.getScaling())) {
                     bitmap = src.getBitmap(bitmap)
                     bitmap?.let {bitmap = crop(it)}
-                    bitmap?.let {btmp ->
-                        effects.forEach {
-                            if (!it.isPrepared()) it.prepare()
-                            bitmap = it.applyEffect(btmp)
+                    effects.forEach {
+                        if(bitmap != null) {
+                            bitmap = it.applyEffect(bitmap!!)
                         }
+                    }
+                    bitmap?.let {btmp ->
                         canvas?.let {cnvs ->
                             cnvs.save()
                             with(src.getScaling()) {
@@ -129,6 +126,23 @@ class EffectView(
     fun clearEffects():EffectView {
         effects.clear()
         return this
+    }
+
+    @RequiresApi(31)
+    override fun setRenderEffect(renderEffect: RenderEffect?) {
+        source?.let { src ->
+            if (!ScalingUtil.checkSize(width, height, src.getScaling())) {
+                bitmap = src.getBitmap(bitmap)
+                bitmap?.let {bitmap = crop(it)}
+                bitmap?.let {btmp ->
+                    val effect = RenderEffect.createBitmapEffect(btmp)
+                    val result = renderEffect?.let { RenderEffect.createChainEffect(it, effect) }
+                    super.setRenderEffect(result)
+                    return
+                }
+            }
+        }
+        super.setRenderEffect(renderEffect)
     }
 
     fun getEffects():List<Effect>  = effects

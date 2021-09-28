@@ -9,6 +9,7 @@ deps[project.name] = [
                 deps.android.desugaring_lib
         ],
 		implementation           : [
+                project(":renderscript-toolkit"),
                 deps.kotlin.stdlib,
                 deps.android.core,
                 deps.android.appcompat
