@@ -1,4 +1,7 @@
 package ru.grakhell.effectview
+
+import java.util.WeakHashMap
+
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -14,10 +17,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-abstract class AbstractEffect(private val listener: OnEffectSettingsChangedListener?): Effect {
+
+/**
+ * Base class for effects
+ */
+
+abstract class AbstractEffect(): Effect {
+
+    private val _listeners:WeakHashMap<OnEffectSettingsChangedListener, String> = WeakHashMap()
 
     fun invalidate() {
-        listener?.onChange()
+        _listeners.forEach {
+            it.key?.onChange()
+        }
+    }
+
+    fun addListener(listener: OnEffectSettingsChangedListener?) {
+        _listeners[listener] = listener.toString()
     }
 
     interface OnEffectSettingsChangedListener {

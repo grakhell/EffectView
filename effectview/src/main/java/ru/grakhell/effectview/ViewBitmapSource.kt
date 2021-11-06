@@ -20,6 +20,10 @@ import android.view.View
 import androidx.annotation.FloatRange
 import kotlin.math.round
 
+/**
+ *  Bitmap source from view
+ */
+
 class ViewBitmapSource(private val view: View):BitmapSource {
 
     private var scaling = 1f

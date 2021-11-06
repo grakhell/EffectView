@@ -16,6 +16,10 @@ limitations under the License.
 */
 import android.graphics.Bitmap
 
+/**
+ * Base interface for effects
+ */
+
 interface Effect {
     fun applyEffect(bitmap: Bitmap): Bitmap
 }

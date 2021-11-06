@@ -1,0 +1,3 @@
+rootProject.name = "EffectView"
+include ':effectview'
+include ':renderscript-toolkit'

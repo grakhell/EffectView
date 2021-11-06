@@ -21,6 +21,13 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
 import androidx.core.graphics.applyCanvas
 
+/**
+ * Effect that's applies tint to the EffectView
+ * @param color - color of tint
+ * @param alpha - transparency of the tint
+ * @param listener - effect settings changes listener
+ */
+
 class TintEffect(
     @ColorInt private var color:Int = Color.TRANSPARENT,
     @IntRange(from=0, to=255) private var alpha:Int = 255,

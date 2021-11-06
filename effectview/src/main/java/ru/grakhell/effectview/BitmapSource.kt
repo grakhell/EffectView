@@ -15,10 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import android.graphics.Bitmap
+import androidx.annotation.FloatRange
+
+/**
+ * Base interface for bitmap sources
+ */
 
 interface BitmapSource {
+    /**
+     * gets bitmap from source
+     * @param - previously created bitmap for reuse, or null
+     * @return - bitmap or null if bitmap doesn't exist or can't created
+     */
     fun getBitmap(dest:Bitmap?):Bitmap?
-    fun setScaling(scaling:Float)
+
+    /**
+     *  sets scaling of bitmap
+     */
+    fun setScaling(@FloatRange(from = 1.0) scaling:Float)
+
     fun getScaling():Float
+
+    /**
+     * return position of bitmap's top left corner in screen coordinates
+     */
     fun getPosition():IntArray?
 }

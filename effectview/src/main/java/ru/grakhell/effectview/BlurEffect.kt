@@ -18,6 +18,12 @@ import android.graphics.Bitmap
 import androidx.annotation.IntRange
 import com.google.android.renderscript.Toolkit
 
+/**
+ * Effect that's applies blur to the EffectView
+ * @param - blur radius
+ * @param listener - effect settings changes listener
+ */
+
 class BlurEffect(
     @IntRange(from=1, to=25) radius:Int,
     listener:OnEffectSettingsChangedListener? =null
