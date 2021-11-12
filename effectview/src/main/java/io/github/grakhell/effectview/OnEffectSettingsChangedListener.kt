@@ -1,4 +1,5 @@
-package ru.grakhell.effectview.util
+package io.github.grakhell.effectview
+
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -14,8 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-internal data class ScaledSize(
-    val width:Int=0,
-    val height:Int=0,
-    val scaleFactor:Float=1f
-)
+
+interface OnEffectSettingsChangedListener {
+    fun onChange()
+}

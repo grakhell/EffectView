@@ -1,4 +1,4 @@
-package ru.grakhell.effectview
+package io.github.grakhell.effectview
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import androidx.annotation.FloatRange
 
 /**
@@ -25,9 +26,10 @@ interface BitmapSource {
     /**
      * gets bitmap from source
      * @param - previously created bitmap for reuse, or null
-     * @return - bitmap or null if bitmap doesn't exist or can't created
+     * @param - matrix for image crop? null if no crop needed
+     * @return - bitmap of view content transformed by matrix
      */
-    fun getBitmap(dest:Bitmap?):Bitmap?
+    fun getBitmap(dest:Bitmap, matrix:Matrix?):Bitmap
 
     /**
      *  sets scaling of bitmap
@@ -37,7 +39,12 @@ interface BitmapSource {
     fun getScaling():Float
 
     /**
-     * return position of bitmap's top left corner in screen coordinates
+     *  return true if otherwise false
+     */
+    fun isNeedsTranslate():Boolean
+
+    /**
+     * return position of bitmap's top left corner in screen coordinates, can return null if isNeedsTranslate() returns false
      */
     fun getPosition():IntArray?
 }

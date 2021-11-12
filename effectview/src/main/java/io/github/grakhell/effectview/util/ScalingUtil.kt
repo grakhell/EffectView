@@ -1,4 +1,4 @@
-package ru.grakhell.effectview.util
+package io.github.grakhell.effectview.util
 /*
 Copyright 2021 Dmitrii Z.
 

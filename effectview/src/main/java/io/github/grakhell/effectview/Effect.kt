@@ -1,5 +1,6 @@
-package ru.grakhell.effectview
+package io.github.grakhell.effectview
 
+import android.graphics.Bitmap
 import java.util.WeakHashMap
 
 /*
@@ -22,9 +23,11 @@ limitations under the License.
  * Base class for effects
  */
 
-abstract class AbstractEffect(): Effect {
+abstract class Effect() {
 
     private val _listeners:WeakHashMap<OnEffectSettingsChangedListener, String> = WeakHashMap()
+
+    abstract fun applyEffect(bitmap: Bitmap): Bitmap
 
     fun invalidate() {
         _listeners.forEach {
@@ -34,9 +37,5 @@ abstract class AbstractEffect(): Effect {
 
     fun addListener(listener: OnEffectSettingsChangedListener?) {
         _listeners[listener] = listener.toString()
-    }
-
-    interface OnEffectSettingsChangedListener {
-        fun onChange()
     }
 }

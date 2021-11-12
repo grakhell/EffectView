@@ -1,4 +1,4 @@
-package ru.grakhell.effectview
+package io.github.grakhell.effectview
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -16,15 +16,15 @@ limitations under the License.
 */
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.view.View
 import androidx.annotation.FloatRange
-import kotlin.math.round
 
 /**
  *  Bitmap source from view
  */
 
-class ViewBitmapSource(private val view: View):BitmapSource {
+class ViewBitmapSource(private val view: View): BitmapSource {
 
     private var scaling = 1f
     private lateinit var bitmap:Bitmap
@@ -42,26 +42,19 @@ class ViewBitmapSource(private val view: View):BitmapSource {
 
     override fun getScaling(): Float = scaling
 
-    override fun getBitmap(dest:Bitmap?): Bitmap {
-        val scale = 1f/scaling
-        val height = if (view.height>0) {round(view.height * scale).toInt()} else {1}
-        val width = if (view.width>0) {round(view.width * scale).toInt()} else {1}
-        bitmap = if (dest == null) {
-            if(this::bitmap.isInitialized) {
-                bitmap
-            } else {
-                Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
-            }
-        }else if(dest.width != width || dest.height != height){
-            Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
-        } else {
-            dest
-        }
+    override fun isNeedsTranslate(): Boolean = true
+
+    override fun getBitmap(dest: Bitmap, matrix: Matrix?): Bitmap {
+        bitmap = dest
         val canvas = Canvas(bitmap)
-        if (scaling>1) {
-            canvas.scale(scale,scale)
+        if (matrix != null) {
+            canvas.save()
+            canvas.setMatrix(matrix)
+            view.draw(canvas)
+            canvas.restore()
+        } else {
+            view.draw(canvas)
         }
-        view.draw(canvas)
         return bitmap
     }
 }

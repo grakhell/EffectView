@@ -1,4 +1,4 @@
-package ru.grakhell.effectview
+package io.github.grakhell.effectview
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -15,32 +15,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Paint
-import androidx.annotation.ColorInt
 import androidx.annotation.IntRange
-import androidx.core.graphics.applyCanvas
+import com.google.android.renderscript.Toolkit
+import io.github.grakhell.effectview.Effect
+import io.github.grakhell.effectview.OnEffectSettingsChangedListener
 
 /**
- * Effect that's applies tint to the EffectView
- * @param color - color of tint
- * @param alpha - transparency of the tint
+ * Effect that's applies blur to the EffectView
+ * @param - blur radius
  * @param listener - effect settings changes listener
  */
 
-class TintEffect(
-    @ColorInt private var color:Int = Color.TRANSPARENT,
-    @IntRange(from=0, to=255) private var alpha:Int = 255,
-    listener:OnEffectSettingsChangedListener? =null
-):AbstractEffect(listener) {
+class BlurEffect(
+    @IntRange(from=1, to=25) radius:Int,
+    listener: OnEffectSettingsChangedListener? =null
+): Effect() {
+    init {
+        super.addListener(listener)
+    }
+    private var _radius = radius
+
+    fun setRadius(@IntRange(from=1, to=25) rad:Int){
+        _radius = rad
+        invalidate()
+    }
 
     override fun applyEffect(bitmap: Bitmap): Bitmap {
-        val p = Paint().apply {
-            color = this@TintEffect.color
-            alpha = this@TintEffect.alpha
-        }
-        return bitmap.applyCanvas {
-            this.drawPaint(p)
-        }
+        return Toolkit.blur(bitmap, _radius)
     }
 }
