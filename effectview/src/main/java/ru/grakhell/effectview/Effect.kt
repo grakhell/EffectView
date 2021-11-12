@@ -1,4 +1,7 @@
 package ru.grakhell.effectview
+
+import java.util.WeakHashMap
+
 /*
 Copyright 2021 Dmitrii Z.
 
@@ -14,12 +17,26 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import android.graphics.Bitmap
 
 /**
- * Base interface for effects
+ * Base class for effects
  */
 
-interface Effect {
-    fun applyEffect(bitmap: Bitmap): Bitmap
+abstract class AbstractEffect(): Effect {
+
+    private val _listeners:WeakHashMap<OnEffectSettingsChangedListener, String> = WeakHashMap()
+
+    fun invalidate() {
+        _listeners.forEach {
+            it.key?.onChange()
+        }
+    }
+
+    fun addListener(listener: OnEffectSettingsChangedListener?) {
+        _listeners[listener] = listener.toString()
+    }
+
+    interface OnEffectSettingsChangedListener {
+        fun onChange()
+    }
 }
