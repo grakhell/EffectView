@@ -26,6 +26,7 @@ val src = ViewBitmapSource(contentImageView)
 ```
 
 EffectView can apply multiple effects at once. By default blur and tint effects is provided, but you can create your own effects by overriding base Effect class.
+Default blur effect uses [Renderscript Toolkit](https://github.com/android/renderscript-intrinsics-replacement-toolkit "")
 ```kotlin
 effectView.apply {
     setSource(src) // sets source

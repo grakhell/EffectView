@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.repository == 'grakhell/'
+    if: github.repository == 'grakhell/EffectView'
     steps:
     - name: Check
       uses: actions/checkout@v2

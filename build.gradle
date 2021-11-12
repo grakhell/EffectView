@@ -7,9 +7,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.5.30"
     }
+}
+
+plugins {
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("org.jetbrains.dokka") version "1.5.30"
 }
 
 ext {
@@ -19,7 +25,8 @@ ext {
     buildToolsVersion = "31.0.0"
     androidVersionCode = 1000
     androidVersionName = "2021.01"
-    applicationIdBase = "ru.grakhell.effectview"
+    androidVersionName = libVersion ?: "1.0.0"
+    applicationIdBase = "io.github.grakhell.effectview"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     sourceCompatibilityVersion = JavaVersion.VERSION_1_8
     targetCompatibilityVersion = JavaVersion.VERSION_1_8
@@ -83,6 +90,4 @@ subprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+apply from: "${rootProject.projectDir}/scripts/p-base.gradle"

@@ -50,13 +50,13 @@ afterEvaluate {
 				artifact javadocJar
 
 				pom {
-					description = ' '
+					description = 'A view that allows you to apply several effects to a bitmap obtained from a configurable source'
 					name = PUBLISH_ARTIFACT_ID
-					url = 'https://github.com/grakhell/ '
+					url = 'https://github.com/grakhell/EffectView'
 
 					issueManagement {
 						system = 'GitHub'
-						url = 'https://github.com/grakhell/ /issues'
+						url = 'https://github.com/grakhell/EffectView/issues'
 					}
 					licenses {
 						license {
@@ -65,9 +65,9 @@ afterEvaluate {
 						}
 					}
 					scm {
-						url = 'https://github.com/grakhell/ '
-						connection = 'scm:https://github.com/grakhell/ .git'
-						developerConnection = 'scm:git://github.com/grakhell/ .git'
+						url = 'https://github.com/grakhell/EffectView'
+						connection = 'scm:https://github.com/grakhell/EffectView.git'
+						developerConnection = 'scm:git://github.com/grakhell/EffectView.git'
 					}
 					developers {
 						developer {
