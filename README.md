@@ -5,9 +5,28 @@ It takes bitmap from a source and apply multiple effects to it then draw it on s
 Effect View redraws its content when changes in view hierarchy are detected (draw() called).
 
 ## Download
-Grab via Gradle:
-```kotlin
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.grakhell/EffectView.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.grakhell%22%20AND%20a:%22EffectView%22)
 
+Grab via Gradle:
+
+groovy
+```groovy
+    implementation 'io.github.grakhell:EffectView:$latest_version'
+``` 
+kotlin dsl
+```kotlin
+    implementation("io.github.grakhell:EffectView:$latest_version")
+```
+
+for extensions with bundled effects
+
+groovy
+```groovy
+    implementation 'io.github.grakhell:EffectView-ext:$latest_version'
+``` 
+kotlin dsl
+```kotlin
+    implementation("io.github.grakhell:EffectView-ext:$latest_version")
 ```
 
 ## How to use
