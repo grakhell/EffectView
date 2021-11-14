@@ -20,5 +20,5 @@ jobs:
       - name: Publish with Gradle
         uses: gradle/gradle-build-action@v2
         with:
+          gradle-version: current
           arguments: build publish --no-parallel -PsigningKey=${{secrets.GPG_KEY_CONTENTS}} -PsigningKeyId=${{secrets.SIGNING_KEYID}} -PsigningPassword=${{secrets.SIGNING_PASSWORD}} -PsonatypeUsername=${{secrets.SONATYPE_USERNAME}} -PsonatypePassword=${{secrets.SONATYPE_PASSWORD}} -PsonatypeProfileId=${{secrets.SONATYPE_PROFILE}} -PlibVersion=${GITHUB_REF:11}
-
