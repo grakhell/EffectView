@@ -7,6 +7,7 @@ ext {
     PUBLISH_GROUP_ID = 'io.github.grakhell'
     PUBLISH_VERSION = rootProject.ext.androidVersionName
     PUBLISH_ARTIFACT_ID = 'EffectView'
+    PUBLISH_DESCRIPTION = 'A view that allows you to apply several effects to a bitmap obtained from a configurable source'
 }
 
 apply from: "${rootProject.projectDir}/scripts/p-module.gradle"
@@ -19,7 +20,6 @@ deps[project.name] = [
                 deps.android.desugaring_lib
         ],
 		implementation           : [
-                project(":renderscript-toolkit"),
                 deps.kotlin.stdlib,
                 deps.android.core,
                 deps.android.appcompat

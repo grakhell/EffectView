@@ -50,7 +50,7 @@ afterEvaluate {
 				artifact javadocJar
 
 				pom {
-					description = 'A view that allows you to apply several effects to a bitmap obtained from a configurable source'
+					description = PUBLISH_DESCRIPTION
 					name = PUBLISH_ARTIFACT_ID
 					url = 'https://github.com/grakhell/EffectView'
 
