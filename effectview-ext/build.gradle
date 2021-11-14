@@ -1,8 +1,16 @@
-plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-}
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+ext {
+    PUBLISH_GROUP_ID = 'io.github.grakhell'
+    PUBLISH_VERSION = rootProject.ext.androidVersionName
+    PUBLISH_ARTIFACT_ID = 'EffectView-ext'
+    PUBLISH_DESCRIPTION = 'Extension to EffectView lib that\'s provide blur and tint effect'
+}
+
+apply from: "${rootProject.projectDir}/scripts/p-module.gradle"
 
 android {
     defaultConfig {
@@ -32,6 +40,9 @@ android {
 deps[project.name] = [
         coreLibraryDesugaring    : [
                 deps.android.desugaring_lib
+        ],
+        api: [
+                project(":effectview")
         ],
         implementation:[
                 deps.kotlin.stdlib,

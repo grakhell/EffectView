@@ -18,8 +18,7 @@ jobs:
           java-version: 11
           distribution: 'zulu'
       - name: Publish with Gradle
-        uses: eskatos/gradle-command-action@v2
+        uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: current
-          arguments: publish --no-parallel -PsigningKey=${{secrets.GPG_KEY_CONTENTS}} -PsigningKeyId=${{secrets.SIGNING_KEYID}} -PsigningPassword=${{secrets.SIGNING_PASSWORD}} -PsonatypeUsername=${{secrets.SONATYPE_USERNAME}} -PsonatypePassword=${{secrets.SONATYPE_PASSWORD}} -PsonatypeProfileId=${{secrets.SONATYPE_PROFILE}} -PlibVersion=${GITHUB_REF:11}
+          arguments: build publish --no-parallel -PsigningKey=${{secrets.GPG_KEY_CONTENTS}} -PsigningKeyId=${{secrets.SIGNING_KEYID}} -PsigningPassword=${{secrets.SIGNING_PASSWORD}} -PsonatypeUsername=${{secrets.SONATYPE_USERNAME}} -PsonatypePassword=${{secrets.SONATYPE_PASSWORD}} -PsonatypeProfileId=${{secrets.SONATYPE_PROFILE}} -PlibVersion=${GITHUB_REF:11}
 
