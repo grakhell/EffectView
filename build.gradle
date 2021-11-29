@@ -52,7 +52,6 @@ subprojects {
                 versionName rootProject.ext.androidVersionName
             }
             compileOptions {
-                coreLibraryDesugaringEnabled true
                 sourceCompatibility rootProject.ext.sourceCompatibilityVersion
                 targetCompatibility rootProject.ext.targetCompatibilityVersion
             }
@@ -66,11 +65,9 @@ subprojects {
             }
             buildTypes {
                 release {
-                    minifyEnabled true
                     proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
                 }
                 debug {
-                    minifyEnabled true
                     proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
                 }
             }
