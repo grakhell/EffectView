@@ -47,6 +47,10 @@ class EffectView(
         return@OnPreDrawListener true
     }
 
+    init {
+        setWillNotDraw(false)
+    }
+
     fun setSource(src: BitmapSource) {
         _source = src
     }
