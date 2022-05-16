@@ -1,6 +1,6 @@
 package io.github.grakhell.effectview
 /*
-Copyright 2021 Dmitrii Z.
+Copyright 2022 Dmitrii Z.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import androidx.annotation.FloatRange
 class ViewBitmapSource(private val view: View): BitmapSource {
 
     private var scaling = 1f
-    private lateinit var bitmap:Bitmap
 
     override fun setScaling( @FloatRange(from = 1.0) scaling: Float) {
         if (scaling<1f) return
@@ -45,7 +44,7 @@ class ViewBitmapSource(private val view: View): BitmapSource {
     override fun isNeedsTranslate(): Boolean = true
 
     override fun getBitmap(dest: Bitmap, matrix: Matrix?): Bitmap {
-        bitmap = dest
+        val bitmap = dest
         val canvas = Canvas(bitmap)
         if (matrix != null) {
             canvas.save()

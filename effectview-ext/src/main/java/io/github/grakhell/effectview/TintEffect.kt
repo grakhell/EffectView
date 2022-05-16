@@ -1,6 +1,6 @@
 package io.github.grakhell.effectview
 /*
-Copyright 2021 Dmitrii Z.
+Copyright 2022 Dmitrii Z.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ import androidx.core.graphics.applyCanvas
  */
 
 class TintEffect(
+    src:BitmapSource,
     @ColorInt private var color:Int = Color.TRANSPARENT,
     @IntRange(from=0, to=255) private var alpha:Int = 255,
     listener: OnEffectSettingsChangedListener? =null
-): Effect() {
+): Effect(src) {
     init {
         super.addListener(listener)
     }
