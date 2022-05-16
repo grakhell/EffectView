@@ -1,10 +1,11 @@
 package io.github.grakhell.effectview
 
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import java.util.WeakHashMap
 
 /*
-Copyright 2021 Dmitrii Z.
+Copyright 2022 Dmitrii Z.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,11 +24,26 @@ limitations under the License.
  * Base class for effects
  */
 
-abstract class Effect() {
+abstract class Effect(private val src:BitmapSource): BitmapSource {
 
     private val _listeners:WeakHashMap<OnEffectSettingsChangedListener, String> = WeakHashMap()
 
-    abstract fun applyEffect(bitmap: Bitmap): Bitmap
+    abstract fun applyEffect(bitmap: Bitmap):Bitmap
+
+    override fun getBitmap(dest: Bitmap, matrix: Matrix?): Bitmap {
+        val b = src.getBitmap(dest, matrix)
+        return applyEffect(b)
+    }
+
+    override fun isNeedsTranslate(): Boolean = src.isNeedsTranslate()
+
+    override fun getPosition(): IntArray? = src.getPosition()
+
+    override fun getScaling(): Float =  src.getScaling()
+
+    override fun setScaling(scaling: Float) {
+        src.setScaling(scaling)
+    }
 
     fun invalidate() {
         _listeners.forEach {

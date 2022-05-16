@@ -1,6 +1,6 @@
 package io.github.grakhell.effectview
 /*
-Copyright 2021 Dmitrii Z.
+Copyright 2022 Dmitrii Z.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,13 +37,13 @@ class EffectView(
 ): FrameLayout(context, attr) {
 
     private var _source: BitmapSource? = null
-    private var _effects: MutableList<Effect> = mutableListOf()
     private var _bitmap:Bitmap? = null
     @AutoUpdate
     private var _autoUpdate:Int = ALLOW
     private val _redrawListener = ViewTreeObserver.OnPreDrawListener {
-
-        applyEffects()
+        if (_autoUpdate != DISALLOW)  {
+            applyEffects()
+        }
         return@OnPreDrawListener true
     }
 
@@ -71,11 +71,6 @@ class EffectView(
         _source?.let { src ->
             if (!ScalingUtil.checkSize(width, height, src.getScaling())) {
                 getSourceBitmap(src)
-                _effects.forEach {
-                    if(_bitmap != null) {
-                        _bitmap = it.applyEffect(_bitmap!!)
-                    }
-                }
             }
         }
     }
@@ -117,28 +112,11 @@ class EffectView(
         return Bitmap.createBitmap(size.width, size.height, Bitmap.Config.ARGB_8888)
     }
 
-    private fun getSourceBitmap(src: BitmapSource): Bitmap {
+    private fun getSourceBitmap(src: BitmapSource) {
         val btm: Bitmap = _bitmap ?: createBitmap()
         val m = setMatrix(src.getScaling(), src.isNeedsTranslate())
         val bitmap = src.getBitmap(btm, m)
         _bitmap = bitmap
-        return bitmap
-    }
-
-    fun addEffect(effect: Effect): EffectView {
-        _effects.add(effect)
-        return this
-    }
-
-    fun removeEffect(effect: Effect): EffectView {
-        _effects.remove(effect)
-        invalidate()
-        return this
-    }
-
-    fun clearEffects(): EffectView {
-        _effects.clear()
-        return this
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -148,19 +126,14 @@ class EffectView(
 
     @RequiresApi(31)
     override fun setRenderEffect(renderEffect: RenderEffect?) {
-        _source?.let { src ->
-            if (!ScalingUtil.checkSize(width, height, src.getScaling())) {
-                val btm: Bitmap = getSourceBitmap(src)
-                val effect = RenderEffect.createBitmapEffect(btm)
-                val result = renderEffect?.let { RenderEffect.createChainEffect(it, effect) }
-                super.setRenderEffect(result)
-                return
-            }
+        if (_bitmap != null ) {
+            val effect = RenderEffect.createBitmapEffect(_bitmap!!)
+            val result = renderEffect?.let { RenderEffect.createChainEffect(it, effect) }
+            super.setRenderEffect(result)
+            return
         }
         super.setRenderEffect(renderEffect)
     }
-
-    fun getEffects():List<Effect>  = _effects
 
     fun setAutoUpdate(autoupdate:Boolean) {
         this.viewTreeObserver.removeOnPreDrawListener(_redrawListener)

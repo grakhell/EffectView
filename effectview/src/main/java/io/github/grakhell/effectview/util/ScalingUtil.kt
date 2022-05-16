@@ -1,6 +1,6 @@
 package io.github.grakhell.effectview.util
 /*
-Copyright 2021 Dmitrii Z.
+Copyright 2022 Dmitrii Z.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ internal object ScalingUtil {
     private const val NORMALIZING_VALUE = 64
 
     @JvmStatic
-    fun scale(width: Int, height:Int, scale:Float): ScaledSize {
+    internal fun scale(width: Int, height:Int, scale:Float): ScaledSize {
         val scaledWidth = normalizeSize(ceil(width/scale).toInt())
         val factor = width/scaledWidth.toFloat()
         val scaledHeight = ceil(height/factor).toInt()
@@ -28,7 +28,7 @@ internal object ScalingUtil {
     }
 
     @JvmStatic
-    fun checkSize(width: Int, height:Int, scale:Float):Boolean {
+    internal fun checkSize(width: Int, height:Int, scale:Float):Boolean {
         return ceil(height/scale).toInt() == 0 || ceil(width/scale).toInt() == 0
     }
 
